@@ -1,0 +1,9 @@
+
+.card-body{
+  height: 21.5rem;
+}
+
+.show-team-btn{
+  display: flex;
+  margin: 2rem auto;
+}

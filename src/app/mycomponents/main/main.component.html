@@ -1,0 +1,129 @@
+
+
+<div class="header-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <input type="text" class="form-control" placeholder="Search by Name" [(ngModel)]="searchText">
+      </div>
+      <div class="col-sm-8">
+        <div class="row">
+          <div class="col-sm-4">
+            <select class="form-control" [(ngModel)]="selectedDomain">
+              <option value="">All Domains</option>
+              <option *ngFor="let domain of domains" [value]="domain">{{domain}}</option>
+            </select>
+          </div>
+          <div class="col-sm-4">
+            <select class="form-control" [(ngModel)]="selectedGender">
+              <option value="">All Genders</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Agender">Agender</option>
+              <option value="Bigender">Bigender</option>
+              <option value="Polygender">Polygender</option>
+              <option value="Genderqueer">Genderqueer</option>
+              <option value="Non-binary">Non-binary</option>
+              <option value="Genderfluid">Genderfluid</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="col-sm-4">
+            <select class="form-control" [(ngModel)]="selectedAvailability">
+              <option value="">All Availability</option>
+              <option value="true">Available</option>
+              <option value="false">Not Available</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+
+    <button  *ngIf="selectedUsers.length > 0 && !sorh" (click) = 'showorhide()' class="btn text-center btn-primary show-team-btn" >Show team details</button>
+    <button  *ngIf="selectedUsers.length > 0 && sorh" (click) = 'showorhide()' class="btn text-center btn-secondary show-team-btn" >Hide team details</button>
+</div>
+
+  <div class="body" *ngIf="sorh">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>Selected Team Members:</h3>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Avatar</th>
+                <th>Name</th>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Gender</th>
+                <th>Domain</th>
+                <th>Availability</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let member of selectedUsers">
+                <td><img src="{{member.avatar}}" alt=""></td>
+                <td>{{member.first_name}} {{member.last_name}}</td>
+                <td>{{member.id}}</td>
+                <td>{{member.email}}</td>
+                <td>{{member.gender}}</td>
+                <td>{{member.domain}}</td>
+                <td>{{member.available}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+    <div class="container">
+      <div class="row">
+              <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let user of filterData().slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)">
+              <div class="m-3 card">
+                <div class="card-body">
+                  <img src="{{user.avatar}}" alt="">
+                  <h5 class="card-title">{{user.first_name}} {{user.last_name}}</h5>
+                  <p class="card-text">Id - {{user.id}}</p>
+                  <p class="card-text">Email - {{user.email}}</p>
+                  <p class="card-text">Gender - {{user.gender}}</p>
+                  <p class="card-text">Domain - {{user.domain}}</p>
+                  <p class="card-text">Availability - {{user.available}}</p>
+                </div>
+                <ng-container *ngIf="user.available && !isUserInTeam(user) && !selectedDomains[user.domain]"  >
+                  <button class="btn btn-primary" (click)="addToTeam(user)"> Add to Team</button>
+                </ng-container>
+                <ng-container *ngIf="user.available && !isUserInTeam(user) && selectedDomains[user.domain]"  >
+                  <button class="btn btn-info" > Domain Taken</button>
+                </ng-container>
+                <ng-container *ngIf="user.available && isUserInTeam(user)"  >
+                  <button class="btn btn-danger" (click)="removeFromTeam(user)">Remove from team</button>
+                </ng-container>
+                <ng-container *ngIf="!user.available">
+                  <button class="btn btn-secondary">Not Available</button>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <mat-paginator [pageSize]="pageSize" [pageIndex]="pageIndex"
+          [pageSizeOptions]="[20]" [length]="data.length"
+          (page)="updatePage($event)">
+        </mat-paginator>
+
+        <!-- <div class="col-sm-12">
+          <h2>Selected Users</h2>
+          <div class="selected-users">
+            <div class="selected-user" *ngFor="let user of selectedUsers">
+              {{user.first_name}} {{user.last_name}} ({{user.domain}})
+            </div>
+          </div>
+          <h2>Selected Domains</h2>
+          <div class="selected-domains">
+            <div class="selected-domain" *ngFor="let domain of getSelectedDomains()">
+              {{domain}}
+            </div>
+          </div>
+        </div> -->
